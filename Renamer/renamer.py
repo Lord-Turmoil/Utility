@@ -16,7 +16,7 @@ def rename(src):
         return None
 
 
-def batch_rename(path):
+def batch_rename(path, prompt):
     """
     :param path: root folder of files to batch rename
     :return: nothing
@@ -29,7 +29,8 @@ def batch_rename(path):
         dest = rename(src)
         if dest:
             print(f"\tRename \"{src}\" to \"{dest}\"")
-            os.rename(path + src, path + dest)
+            if not prompt:
+                os.rename(path + src, path + dest)
 
 
 while True:
@@ -41,11 +42,14 @@ while True:
     if path == "quit":
         break
 
-    batch_rename(path)
+    batch_rename(path, True)
+    ret = input("Confirm rename? (Y/N) ").lower()
+    if ret[0] == 'y':
+        batch_rename(path, False)
+        ret = input("Continue? (Y/N) ").lower()
+        if ret[0] != 'y':
+            break
 
-    ret = input("Continue? (Y/N) ").lower()
-    if ret[0] != 'y':
-        break
     os.system("cls")
 
 print("Thanks for your using!")
